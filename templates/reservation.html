@@ -1,0 +1,76 @@
+{% extends 'layout.html' %}
+
+{% block title %}Ticket reservation{% endblock %}
+
+{% block content %}
+            <h2>Book a ticket</h2>
+    {% if teams %}
+            <p>Book a ticket for your team!</p>
+            <div>
+                        <form action="{{ url_for('reservation') }}" method="post">
+                            <div>
+                                <label for="teamSelection">Choose your team: </label>
+                                <select class="form-control form-control" id="teamSelection" name="teamSelection">
+                                      {% for row in teams %}
+                                          <option name="team">{{ row['teamName'] }} </option>
+                                      {% endfor %}
+                                    </select>
+                                </label>
+                                <input type="submit" class="btn-green" value="submit" name="submit1">
+                            </div>
+                        </form>
+            </div>
+
+    {% endif %}
+
+    {% if fixtures %}
+            <p>Current season fixtures for {{team}}:</p>
+            <div>
+                <table class="fixtures-table">
+                    {% for row in fixtures %}
+                    <tr>
+                        <td> {{ '%s' % row['date'] }} </td>
+                        <td> {{ '%s vs %s' % (row["home"], row['away']) }} </td>
+                        <td> {{ '%s, %s' % (row['stadiumName'], row['address']) }}  </td>
+                        <td><a href="/reservation/{{ row['matchId'] }}" class="btn-green"> Check tickets </a> </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+    {% endif %}
+
+    {% if matchId %}
+            <div>
+                <form action="#" method="post">
+                    <div>
+                        <label>Choose sector: </label>
+                        <select class="form-control form-control" id="sector" name="sector">
+                                  <option name="sector">A</option>
+                                  <option name="sector">B</option>
+                                  <option name="sector">C</option>
+                                  <option name="sector">D</option>
+                        </select>
+
+                        <label>Choose column: </label>
+                        <select class="form-control form-control" id="column" name="column">
+                            {% for c in range(200) %}
+                                  <option name="column">{{c}}</option>
+                            {% endfor %}
+
+                        </select>
+
+                        <label>Choose row: </label>
+                        <select class="form-control form-control" id="row" name="row">
+                            {% for r in range(200) %}
+                                  <option name="row">{{r}}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="hidden" id="matchId" name="matchId" value="{{ matchId }} ">
+                        <input type="submit" class="btn-green" value="Book" name="Book">
+                    </div>
+                </form>
+            </div>
+    {% endif %}
+
+
+{% endblock %}

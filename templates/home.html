@@ -1,0 +1,23 @@
+{% extends 'layout.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<h2>Home Page</h2>
+<p>Welcome back, {{ login }}!</p>
+
+<p>Upcoming fixtures:</p>
+<div>
+    <table class="fixtures-table">
+        {% for row in fixture %}
+        <tr>
+            <td> {{ '%s' % row['date'] }} </td>
+            <td> {{ '%s vs %s' % (row["home"], row['away']) }} </td>
+            <td> {{ '%s, %s' % (row['stadiumName'], row['address']) }}  </td>
+            <td><a href="/reservation/{{ row['matchId'] }}" class="btn-green"> Check tickets </a> </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <p style="text-align: center;"><a href="fixtures" class="btn-green"> Show more </a></p>
+</div>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'layout.html' %}
+
+{% block title %}Fixtures{% endblock %}
+
+
+
+{% block content %}
+
+<script>
+    function changeMatchweek(matchweekSelected){
+        matchweekSelected = document.getElementById('matchweek-select');
+        var table = document.getElementById('fixtures-table');
+        fixture = JSON.parse({{ fixturejs | tojson }})
+        currentMatchweek = JSON.parse({{ currentMatchweekjs | tojson }})
+        allMatchweeks = JSON.parse({{ allMatchweeks | tojson }})
+        let reservationCtr = JSON.parse({{ reservationCtr | tojson }});
+        document.getElementById('Ctr').innerHTML = "Stats for Geeks - currently reserved this matchweek: " + reservationCtr[matchweekSelected.options[matchweekSelected.selectedIndex].value];
+        for (var x in allMatchweeks) {
+            if ( matchweekSelected.options[matchweekSelected.selectedIndex].value == allMatchweeks[x].matchweek) {
+                table.innerHTML = ""
+                for (var y in fixture) {
+                    if ( fixture[y].matchweek == allMatchweeks[x].matchweek) {
+                        if ( fixture[y].matchId >= currentMatchweek.matchId ) {
+                            table.innerHTML = table.innerHTML + '<tr><td>' + fixture[y].date + '</td><td>' + fixture[y].home + ' vs ' + fixture[y].away + '</td><td>' +
+                            fixture[y].stadiumName + ', ' + fixture[y].address + '</td><td><a href="/reservation/' + fixture[y].matchId + '" class="btn-green"> Check tickets </a></td></tr>' ;
+                        }
+                        else {
+                            table.innerHTML = table.innerHTML + '<tr><td>' + fixture[y].date + '</td><td>' + fixture[y].home + ' vs ' + fixture[y].away + '</td><td>' +
+                            fixture[y].stadiumName + ', ' + fixture[y].address + '</td><td><button disabled class="btn-red"> Booking closed </button> </td></tr>' ;
+                        }
+                    }
+                }
+            }
+        }
+    }
+</script>
+
+<h2>Fixtures</h2>
+    <p> Current season fixtures:
+    <select name="matchweek-select" id="matchweek-select" onchange="changeMatchweek(this)">
+        {% for i in range(1, 39) %}
+            {% if i == currentMatchweek["matchweek"] %}
+            <option value="{{ i }}" selected>Matchweek {{ i }}</option>
+            {% else %}
+            <option value="{{ i }}">Matchweek {{ i }}</option>
+            {% endif %}
+        {% endfor %}
+    </select>
+</p>
+<div>
+    <table id="fixtures-table" class="fixtures-table">
+        {% for row in fixture %}
+            {% if row["matchweek"] == currentMatchweek["matchweek"] %}
+            <tr>
+                <td> {{ '%s' % row['date'] }} </td>
+                <td> {{ '%s vs %s' % (row["home"], row['away']) }} </td>
+                <td> {{ '%s, %s' % (row['stadiumName'], row['address']) }}  </td>
+                {% if row["matchId"] >= currentMatchweek["matchId"] %}
+                    <td><a href="/reservation/{{ row['matchId'] }}" class="btn-green"> Check tickets </a> </td>
+                {% else %}
+                    <td><button disabled class="btn-red"> Booking closed </button> </td>
+                {% endif %}
+            </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
+</div>
+<h1 style="text-align: center;">
+    <i style="text-align: center;" id="Ctr">Stats for Geeks - currently reserved this matchweek: {{ '%s' % currentReservationCtr }}</i>
+</h1>
+{% endblock %}

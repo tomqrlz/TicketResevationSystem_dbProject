@@ -1,0 +1,61 @@
+{% extends 'layout.html' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<h2>Profile Page</h2>
+<p>Account details:</p>
+<div>
+    <table>
+        {% for key, value in account.items() %}
+<!--            {% if key == "userPassword" %}-->
+<!--                <tr>-->
+<!--                    <td>{{ key }}</td>-->
+<!--                    <td>HIGHLY RESTICTED! &#128683</td>-->
+<!--                </tr>-->
+<!--            {% else %}-->
+                <tr>
+                    <td>{{ key }}</td>
+                    <td>{{ value }}</td>
+                </tr>
+<!--            {% endif %}-->
+        {% endfor %}
+    </table>
+</div>
+<p>Your reservations:</p>
+
+<div>
+    <table class="fixtures-table">
+        {% if reservations %}
+            <tr>
+                <th> Date </th>
+                <th> Match </th>
+                <th> Address </th>
+                <th> Sector/Column/Row </th>
+            </tr>
+            {% for row in reservations %}
+            <tr>
+                <td> {{ '%s' % row['date'] }} </td>
+                <td> {{ '%s vs %s' % (row["home"], row['away']) }} </td>
+                <td> {{ '%s, %s' % (row['stadiumName'], row['address']) }}  </td>
+                <td> {{ '%s/%s/%s' % (row['sect'], row['col'], row['row']) }}</td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <p>No reservations yet</p>
+        {% endif %}
+    </table>
+</div>
+
+<h2>Change your login</h2>
+<div>
+    <form action="{{ url_for('profile') }}" method="post">
+        <div>
+            <input type="text" id="userLogin" name="userLogin">
+            <input type="submit" class="btn-green" value="loginChange" name="loginChange">
+        </div>
+    </form>
+    <h3>{{message}}</h3>
+</div>
+
+{% endblock %}
