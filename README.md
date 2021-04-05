@@ -47,4 +47,14 @@ Web application for booking football match tickets. Flask, python, html, css con
   <h4> CSV data scraper<h4>
 </details>
 
-Created by TM, JW, KH
+## Usage
+To run the program install necessary modules.
+
+Then in terminal run 'main.py' file:
+```sh
+$ python main.py
+```
+
+
+
+<p align="right"> Created by TM, JW, KH </p>
